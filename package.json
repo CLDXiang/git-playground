@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "init-lib1": "ts-node src/initLib1/index.ts",
+    "generate-object": "ts-node src/generateObject/index.ts",
     "lint": "eslint . --ext ts"
   },
   "devDependencies": {
