@@ -16,20 +16,21 @@ const libPath = path.join(cwd, 'libs', 'generateObject')
 
 async function generateObject(content: string) {
   const header = `blob ${content.length}\0`
+  console.log(`file header: ${header}`)
   const store = header + content
   const sha1 = createHash('sha1').update(store).digest('hex')
+  console.log(`SHA-1: ${sha1}`)
   try {
     const zlibContent = deflateSync(store)
     const objectDirPath = `.git/objects/${sha1.slice(0, 2)}`
 
     fs.mkdirSync(path.join(libPath, objectDirPath), { recursive: true })
-    fs.writeFileSync(
-      path.join(libPath, objectDirPath, `${sha1.slice(2, 40)}`),
-      zlibContent,
-    )
+    const filePath = path.join(libPath, objectDirPath, `${sha1.slice(2, 40)}`)
+    fs.writeFileSync(filePath, zlibContent)
+    console.log(`object generated at: ${filePath}`)
   } catch (err) {
     console.error(`can't generate object: `, err)
-    process.exitCode = 1
+    process.exit(1)
   }
   return sha1
 }
@@ -49,7 +50,7 @@ function test(sha1: string) {
   const { params, options } = parseCommand(process.argv)
 
   if (!params.length) {
-    console.error('Error: please provide a file path as input')
+    console.error('ERROR: please provide a file path as input')
     process.exit(1)
   }
   const inputFilePath = path.isAbsolute(params[0])
