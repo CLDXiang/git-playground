@@ -12,7 +12,7 @@ import fs from 'fs'
 import cp from 'child_process'
 import { cwd, initGitDir, parseCommand } from '../utils'
 
-const libPath = path.join(cwd, 'libs', 'generateObject')
+const labPath = path.join(cwd, 'labs', 'generateObject')
 
 async function generateObject(content: string) {
   const header = `blob ${content.length}\0`
@@ -24,8 +24,8 @@ async function generateObject(content: string) {
     const zlibContent = deflateSync(store)
     const objectDirPath = `.git/objects/${sha1.slice(0, 2)}`
 
-    fs.mkdirSync(path.join(libPath, objectDirPath), { recursive: true })
-    const filePath = path.join(libPath, objectDirPath, `${sha1.slice(2, 40)}`)
+    fs.mkdirSync(path.join(labPath, objectDirPath), { recursive: true })
+    const filePath = path.join(labPath, objectDirPath, `${sha1.slice(2, 40)}`)
     fs.writeFileSync(filePath, zlibContent)
     console.log(`object generated at: ${filePath}`)
   } catch (err) {
@@ -36,10 +36,10 @@ async function generateObject(content: string) {
 }
 
 function test(sha1: string) {
-  console.log(`execute "git cat-file -p ${sha1}" in lib directory:`)
+  console.log(`execute "git cat-file -p ${sha1}" in lab directory:`)
   console.log('▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾▾')
   cp.spawnSync('git', ['cat-file', '-p', sha1], {
-    cwd: libPath,
+    cwd: labPath,
     stdio: 'inherit',
   })
   // FIXME: tricky, if output nothing, maybe should use cp.spawn and ChildProcess.on('close') event
@@ -60,7 +60,7 @@ function test(sha1: string) {
   // read input file
   const input = fs.readFileSync(inputFilePath).toString()
 
-  initGitDir(libPath)
+  initGitDir(labPath)
   generateObject(input).then((sha1) => {
     if (options.includes('-t')) {
       test(sha1)

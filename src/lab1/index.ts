@@ -1,5 +1,6 @@
 import { parseCommand } from '../utils'
 import init from './init'
+import commit from './commit'
 
 const { params } = parseCommand(process.argv)
 
@@ -30,6 +31,15 @@ if (!COMMANDS.includes(command)) {
 switch (command) {
   case 'init':
     init()
+    break
+  case 'commit':
+    if (!params[1]) {
+      console.error(
+        'ERROR: please provide a commit message like this: commit first',
+      )
+      process.exit(1)
+    }
+    commit(params[1])
     break
   default:
     break
