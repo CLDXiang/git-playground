@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "init-lib1": "ts-node src/initLib1/index.ts",
+    "lib1": "ts-node src/lib1/index.ts",
     "generate-object": "ts-node src/generateObject/index.ts",
     "unzip": "ts-node src/unzip/index.ts",
     "lint": "eslint . --ext ts"
