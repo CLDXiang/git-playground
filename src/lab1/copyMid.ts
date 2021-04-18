@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs'
+import { readFileSync, writeFileSync, appendFileSync } from 'fs'
 import path from 'path'
 import { forEachDirectory } from './utils'
 
@@ -20,13 +20,19 @@ export default function copyMid() {
     )
 
     // insert copied content into middle
-    const newFileContent = Buffer.from([
-      ...rawFileContent.slice(0, (rawFileContent.length >> 1) + 25600),
-      ...middleContent,
-      ...rawFileContent.slice((rawFileContent.length >> 1) + 256000),
-    ])
-    writeFileSync(path.join(targetPath, `sample.${fileType}`), newFileContent)
-    console.log('new file byte size:', newFileContent.byteLength)
+    writeFileSync(
+      path.join(targetPath, `sample.${fileType}`),
+      rawFileContent.slice(0, (rawFileContent.length >> 1) + 25600),
+    )
+    appendFileSync(path.join(targetPath, `sample.${fileType}`), middleContent)
+    appendFileSync(
+      path.join(targetPath, `sample.${fileType}`),
+      rawFileContent.slice((rawFileContent.length >> 1) + 256000),
+    )
+    console.log(
+      'new file byte size:',
+      rawFileContent.byteLength + middleContent.byteLength,
+    )
 
     console.log('▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴▴')
   })
