@@ -2,6 +2,7 @@ import { parseCommand } from '../utils'
 import init from './init'
 import commit from './commit'
 import copyMid from './copyMid'
+import gc from './gc'
 
 const { params } = parseCommand(process.argv)
 
@@ -44,6 +45,9 @@ switch (command) {
     break
   case 'copyMid':
     copyMid()
+    break
+  case 'gc':
+    gc()
     break
   default:
     break

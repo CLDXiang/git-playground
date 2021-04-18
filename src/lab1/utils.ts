@@ -1,5 +1,6 @@
 import path from 'path'
 import fs from 'fs'
+import cp from 'child_process'
 
 const FILE_TYPE_OPTIONS = ['txt', 'json', 'jpg', 'exe']
 const SIZE_OPTIONS = ['1M', '5M', '10M', '20M', '50M', '100M']
@@ -54,4 +55,26 @@ export function printObjectsSize(repoPath: string) {
     })
 
   return objects
+}
+
+/** print all pack info in a git repository */
+export function printPacksInfo(repoPath: string) {
+  const gitPath = path.join(repoPath, '.git')
+  if (!fs.existsSync(gitPath)) {
+    console.error(`ERROR: ${repoPath} is not a git repository`)
+    process.exit(1)
+  }
+
+  const packsPath = path.join(gitPath, 'objects', 'pack')
+
+  fs.readdirSync(packsPath).forEach((file) => {
+    if (file.endsWith('.idx')) {
+      const filePath = path.join(packsPath, file)
+      console.log(`# git verify-pack -v ${filePath}`)
+      cp.spawnSync('git', ['verify-pack', '-v', filePath], {
+        cwd: repoPath,
+        stdio: 'inherit',
+      })
+    }
+  })
 }
