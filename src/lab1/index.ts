@@ -1,16 +1,17 @@
 import { parseCommand } from '../utils'
 import init from './init'
 import commit from './commit'
+import copyMid from './copyMid'
 
 const { params } = parseCommand(process.argv)
 
 const COMMANDS = [
   /** mkdir & git init */
   'init',
-  /** git commit sample.* */
+  /** git commit sample. */
   'commit',
-  /** append content after sample.* */
-  'append',
+  /** copy middle 512KB content and insert it into sample file */
+  'copyMid',
   /** git gc */
   'gc',
 ]
@@ -40,6 +41,9 @@ switch (command) {
       process.exit(1)
     }
     commit(params[1])
+    break
+  case 'copyMid':
+    copyMid()
     break
   default:
     break

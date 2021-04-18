@@ -27,6 +27,7 @@
         "argsIgnorePattern": "^_"
       }
     ],
+    "no-bitwise": 0,
     "no-console": 0,
     "prettier/prettier": [
       "error",
